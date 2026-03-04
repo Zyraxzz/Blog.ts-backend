@@ -7,6 +7,7 @@ const UserSchema = z.object({
     .min(3, { message: 'Username must be more than 3 characters long' }),
   email: z.email('Invalid email'),
   password: z.string().min(8, 'Password must have at least 8 characters'),
+  avatar: z.string('Invalid avatar'),
 });
 
 export class UserDTO extends createZodDto(UserSchema) {}
