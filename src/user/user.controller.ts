@@ -9,7 +9,6 @@ export class UserController {
   @Post('create')
   async create(@Body() body: UserDTO) {
     await this.userService.create(body);
-
     return body;
   }
 }

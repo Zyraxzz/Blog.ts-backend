@@ -76,8 +76,8 @@
       "**/*.(t|j)s"
     ],
     "moduleNameMapper": {
-        "^(\\.{1,2}/.*)\\.js$": "$1"
-      },
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
     "coverageDirectory": "./test/coverage",
     "testEnvironment": "node"
   }
