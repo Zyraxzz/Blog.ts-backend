@@ -1,31 +1,24 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserDTO } from './dtos/user.dto';
-import { PrismaService } from '../prisma/prisma.service';
 import * as argon2 from 'argon2';
+import { UserAlreadyExists } from 'src/common/errors/userAlreadyExists';
+import { UserRepository } from 'src/repositories/user/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private userRepository: UserRepository) {}
   async create(data: UserDTO) {
-    const userAlreadyExists = await this.prismaService.user.findFirst({
-      where: {
-        email: data.email,
-      },
-    });
+    const userAlreadyExists = await this.userRepository.findByEmail(data.email);
 
     if (userAlreadyExists) {
-      throw new ConflictException('User already exists');
+      throw new UserAlreadyExists();
     }
 
     const passwordHash = await argon2.hash(data.password);
 
-    const user = await this.prismaService.user.create({
-      data: {
-        username: data.username,
-        email: data.email,
-        password: passwordHash,
-        avatar: data.avatar,
-      },
+    const user = await this.userRepository.create({
+      ...data,
+      password: passwordHash,
     });
 
     return {
