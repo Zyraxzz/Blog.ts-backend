@@ -7,6 +7,7 @@ import { UserRepository } from 'src/repositories/user/user.repository';
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) {}
+
   async create(data: UserDTO) {
     const userAlreadyExists = await this.userRepository.findByEmail(data.email);
 
