@@ -12,7 +12,7 @@ export class UserRepository {
     });
   }
 
-  async create(data: UserDTO) {
+  async createUser(data: UserDTO) {
     return this.prismaService.user.create({ data });
   }
 }

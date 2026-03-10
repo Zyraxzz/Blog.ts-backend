@@ -3,6 +3,7 @@ import { GetUserDTO, UserDTO } from './dtos/user.dto';
 import * as argon2 from 'argon2';
 import { UserAlreadyExists } from 'src/common/errors/userAlreadyExists';
 import { UserRepository } from 'src/repositories/user/user.repository';
+import { InvalidCredentials } from 'src/common/errors/invalidCredentials';
 
 @Injectable()
 export class UserService {
@@ -17,7 +18,7 @@ export class UserService {
 
     const passwordHash = await argon2.hash(data.password);
 
-    const user = await this.userRepository.create({
+    const user = await this.userRepository.createUser({
       ...data,
       password: passwordHash,
     });
@@ -34,7 +35,7 @@ export class UserService {
     const user = await this.userRepository.findByEmail(data.email);
 
     if (!user) {
-      throw new UserAlreadyExists();
+      throw new InvalidCredentials();
     }
 
     return {
@@ -43,5 +44,19 @@ export class UserService {
       email: user.email,
       avatar: user.avatar,
     };
+  }
+
+  async update(data: UserDTO) {
+    const user = await this.userRepository.findByEmail(data.email);
+
+    if (!user) {
+      throw new UserAlreadyExists();
+    }
+
+    const passwordMatch = await argon2.verify(user.password, data.password);
+
+    if (!passwordMatch) {
+      throw new InvalidCredentials();
+    }
   }
 }
