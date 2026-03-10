@@ -21,12 +21,10 @@ export class ZodExceptionFilter implements ExceptionFilter {
 
     const [firstIssue] = zodError.issues;
 
-    const errorResponse = {
+    response.status(HttpStatus.BAD_REQUEST).json({
       statusCode: HttpStatus.BAD_REQUEST,
       message: firstIssue?.message ?? 'Validation failed',
       field: firstIssue?.path.join('.') ?? 'unknown',
-    };
-
-    response.status(HttpStatus.BAD_REQUEST).json(errorResponse);
+    });
   }
 }

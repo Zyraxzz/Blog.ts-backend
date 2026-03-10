@@ -10,13 +10,13 @@ import {
 import { GetUserDTO, UserDTO } from './dtos/user.dto';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UsePipes(new ZodValidationPipe(UserDTO))
+  @UsePipes(new ZodValidationPipe(UserDTO.schema))
   @Post('create')
   async create(@Body() body: UserDTO) {
     return await this.userService.create(body);
@@ -24,7 +24,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  @UsePipes(new ZodValidationPipe(GetUserDTO))
+  @UsePipes(new ZodValidationPipe(GetUserDTO.schema))
   async get(@Body() body: GetUserDTO) {
     return await this.userService.get(body);
   }
