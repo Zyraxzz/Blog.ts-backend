@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserDTO } from './dtos/user.dto';
+import { GetUserDTO, UserDTO } from './dtos/user.dto';
 import * as argon2 from 'argon2';
 import { UserAlreadyExists } from 'src/common/errors/userAlreadyExists';
 import { UserRepository } from 'src/repositories/user/user.repository';
@@ -26,7 +26,22 @@ export class UserService {
       id: user.id,
       username: user.username,
       email: user.email,
-      avatar: data.avatar,
+      avatar: user.avatar,
+    };
+  }
+
+  async get(data: GetUserDTO) {
+    const user = await this.userRepository.findByEmail(data.email);
+
+    if (!user) {
+      throw new UserAlreadyExists();
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      avatar: user.avatar,
     };
   }
 }
