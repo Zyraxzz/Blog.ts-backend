@@ -6,9 +6,11 @@ import {
   UseGuards,
   UploadedFile,
   UseInterceptors,
-  UsePipes,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
-import { GetUserDTO, UserDTO } from './dtos/user.dto';
+import { GetUserDTO, UserDTO, UpdateUserDTO } from './dtos/user.dto';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -34,10 +36,37 @@ export class UserController {
       avatar: file?.filename,
     });
   }
+
   @UseGuards(AuthGuard)
   @Get('me')
-  @UsePipes(new ZodValidationPipe(GetUserDTO.schema))
-  async get(@Body() body: GetUserDTO) {
+  async get(@Body(new ZodValidationPipe(GetUserDTO.schema)) body: GetUserDTO) {
     return await this.userService.get(body);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('update/:id')
+  @UseInterceptors(
+    FileInterceptor('avatar', multerConfig),
+    AvatarRemoveInterceptor,
+  )
+  async update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(UserDTO.schema)) body: UpdateUserDTO,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return await this.userService.update(id, {
+      ...body,
+      avatar: file?.filename,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('delete/:id')
+  @UseInterceptors(
+    FileInterceptor('avatar', multerConfig),
+    AvatarRemoveInterceptor,
+  )
+  async delete(@Param('id') id: string) {
+    return await this.userService.delete(id);
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GetUserDTO, UserDTO } from './dtos/user.dto';
+import { GetUserDTO, UpdateUserDTO, UserDTO } from './dtos/user.dto';
 import * as argon2 from 'argon2';
 import { UserAlreadyExists } from 'src/common/errors/userAlreadyExists';
 import { UserRepository } from 'src/repositories/user/user.repository';
@@ -49,5 +49,44 @@ export class UserService {
       email: user.email,
       avatar: user.avatar,
     };
+  }
+
+  async update(id: string, data: UpdateUserDTO) {
+    const user = await this.userRepository.findByID(id);
+
+    if (!user) {
+      throw new InvalidCredentials();
+    }
+
+    const updateData: any = { ...data };
+
+    if (data.password) {
+      updateData.password = await argon2.hash(data.password);
+    }
+
+    if (data.avatar && user.avatar) {
+      await this.imageService.removeImage('avatar', user.avatar);
+    }
+
+    const updatedUser = await this.userRepository.updateUser(id, updateData);
+
+    return {
+      id: updatedUser.id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      avatar: updatedUser.avatar,
+    };
+  }
+
+  async delete(id: string) {
+    const user = await this.userRepository.findByID(id);
+
+    if (!user) {
+      throw new InvalidCredentials();
+    }
+
+    await this.userRepository.deleteUser(id);
+
+    return;
   }
 }

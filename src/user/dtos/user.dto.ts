@@ -15,3 +15,5 @@ export class UserDTO extends createZodDto(UserSchema) {}
 export class GetUserDTO extends createZodDto(
   UserSchema.partial().required({ email: true }),
 ) {}
+
+export class UpdateUserDTO extends createZodDto(UserSchema.partial()) {}
