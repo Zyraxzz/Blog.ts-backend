@@ -12,7 +12,7 @@ export class RoleRepository {
     });
   }
 
-  async findManyByName() {
+  async findMany() {
     return this.prismaService.role.findMany({});
   }
 
