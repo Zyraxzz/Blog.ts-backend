@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GetUserDTO, UpdateUserDTO, UserDTO } from './dtos/user.dto';
 import * as argon2 from 'argon2';
-import { UserAlreadyExists } from 'src/common/errors/userAlreadyExists';
+import { AlreadyExists } from 'src/common/errors/alreadyExists';
 import { UserRepository } from 'src/repositories/user/user.repository';
 import { ImageService } from 'src/common/upload/image.service';
 import { InvalidCredentials } from 'src/common/errors/invalidCredentials';
@@ -17,7 +17,7 @@ export class UserService {
     const userAlreadyExists = await this.userRepository.findByEmail(data.email);
 
     if (userAlreadyExists) {
-      throw new UserAlreadyExists();
+      throw new AlreadyExists();
     }
 
     const passwordHash = await argon2.hash(data.password);
