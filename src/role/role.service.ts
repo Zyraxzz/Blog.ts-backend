@@ -25,12 +25,20 @@ export class RoleService {
   }
 
   async get() {
-    const role = await this.roleRepository.findManyByName();
+    const role = await this.roleRepository.findMany();
 
     if (!role) {
       throw new NotFoundException();
     }
 
     return role;
+  }
+
+  async delete(data: RoleDTO) {
+    const role = await this.roleRepository.findByName(data.name);
+
+    if (!role) {
+      throw new NotFoundException();
+    }
   }
 }

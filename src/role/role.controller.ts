@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { RoleDTO } from './dtos/role.dto';
 import { RoleService } from './role.service';
 
@@ -14,5 +14,10 @@ export class RoleController {
   @Get('all')
   async get() {
     return await this.roleService.get();
+  }
+
+  @Delete('delete')
+  async delete(@Body() body: RoleDTO) {
+    return await this.roleService.delete(body);
   }
 }
