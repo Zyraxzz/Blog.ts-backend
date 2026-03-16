@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InvalidCredentials } from 'src/common/errors/invalidCredentials';
-import { UserRepository } from 'src/repositories/user/user.repository';
+import { UserRepository } from 'src/user/repositories/user.repository';
 import * as argon2 from 'argon2';
 import { LoginDTO } from './dtos/login.dto';
 

@@ -12,11 +12,23 @@ export class RoleRepository {
     });
   }
 
+  async findByID(id: string) {
+    return this.prismaService.role.findFirst({
+      where: { id },
+    });
+  }
+
   async findMany() {
     return this.prismaService.role.findMany({});
   }
 
   async createRole(data: RoleDTO) {
     return this.prismaService.role.create({ data });
+  }
+
+  async deleteRole(id: string) {
+    await this.prismaService.user.delete({
+      where: { id },
+    });
   }
 }

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { GetUserDTO, UpdateUserDTO, UserDTO } from './dtos/user.dto';
 import * as argon2 from 'argon2';
 import { AlreadyExists } from 'src/common/errors/alreadyExists';
-import { UserRepository } from 'src/repositories/user/user.repository';
+import { UserRepository } from 'src/user/repositories/user.repository';
 import { ImageService } from 'src/common/upload/image.service';
 import { InvalidCredentials } from 'src/common/errors/invalidCredentials';
 
@@ -55,7 +55,7 @@ export class UserService {
     const user = await this.userRepository.findByID(id);
 
     if (!user) {
-      throw new InvalidCredentials();
+      throw new NotFoundException();
     }
 
     const updateData: any = { ...data };
