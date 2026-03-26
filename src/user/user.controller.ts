@@ -10,7 +10,7 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { GetUserDTO, UserDTO, UpdateUserDTO } from './dtos/user.dto';
+import { UserDTO, UpdateUserDTO } from './dtos/user.dto';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -39,8 +39,8 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  async get(@Body(new ZodValidationPipe(GetUserDTO.schema)) body: GetUserDTO) {
-    return await this.userService.get(body);
+  async get(@Param('id') id: string) {
+    return await this.userService.get(id);
   }
 
   @UseGuards(AuthGuard)

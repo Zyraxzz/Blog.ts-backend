@@ -19,7 +19,7 @@ model User {
   roles UserRole[]
   likes Like[]
   favorites Favorite[]
-  comments Comment[] 
+  comments Comment[]
   views View[]
 
   @@map("users")
@@ -56,9 +56,9 @@ model Post {
   published_at DateTime @default(now())
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  categories CategoriesOnPost[] 
-  likes Like[]  
-  favorites Favorite[] 
+  categories CategoriesOnPost[]
+  likes Like[]
+  favorites Favorite[]
   comments Comment[]
   views View[]
   tags PostsOnTags[]
@@ -94,7 +94,7 @@ model Like {
   created_at DateTime @default(now())
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
   post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
-  
+
   @@map("likes")
 }
 
@@ -108,6 +108,7 @@ model Favorite {
 
   @@map("favorites")
 }
+
 model Comment {
   id String @id @default(cuid())
   user_id String

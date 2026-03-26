@@ -40,8 +40,8 @@ export class UserService {
     };
   }
 
-  async get(data: GetUserDTO) {
-    const user = await this.userRepository.findByEmail(data.email);
+  async get(id: string) {
+    const user = await this.userRepository.findByID(id);
 
     if (!user) {
       throw new UnauthorizedException(Messages.USER.INVALID_CREDENTIALS);
