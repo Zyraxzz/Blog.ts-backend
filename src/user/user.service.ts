@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { GetUserDTO, UpdateUserDTO, UserDTO } from './dtos/user.dto';
 import * as argon2 from 'argon2';
-import { AlreadyExists } from 'src/common/errors/alreadyExists';
 import { UserRepository } from 'src/user/repositories/user.repository';
 import { ImageService } from 'src/common/upload/image.service';
-import { InvalidCredentials } from 'src/common/errors/invalidCredentials';
+import { Messages } from 'src/common/messages/messages';
 
 @Injectable()
 export class UserService {
@@ -17,7 +21,7 @@ export class UserService {
     const userAlreadyExists = await this.userRepository.findByEmail(data.email);
 
     if (userAlreadyExists) {
-      throw new AlreadyExists();
+      throw new ConflictException(Messages.USER.ALREADY_EXISTS);
     }
 
     const passwordHash = await argon2.hash(data.password);
@@ -40,7 +44,7 @@ export class UserService {
     const user = await this.userRepository.findByEmail(data.email);
 
     if (!user) {
-      throw new InvalidCredentials();
+      throw new UnauthorizedException(Messages.USER.INVALID_CREDENTIALS);
     }
 
     return {
@@ -55,7 +59,7 @@ export class UserService {
     const user = await this.userRepository.findByID(id);
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException(Messages.USER.NOT_FOUND);
     }
 
     const updateData: any = { ...data };
@@ -82,11 +86,11 @@ export class UserService {
     const user = await this.userRepository.findByID(id);
 
     if (!user) {
-      throw new InvalidCredentials();
+      throw new NotFoundException(Messages.USER.NOT_FOUND);
     }
 
     await this.userRepository.deleteUser(id);
 
-    return;
+    return { message: Messages.USER.DELETED };
   }
 }

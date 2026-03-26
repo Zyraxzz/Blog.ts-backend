@@ -18,4 +18,20 @@ export class PostRepository {
       },
     });
   }
+
+  async findMany() {
+    return this.prismaService.post.findMany({});
+  }
+
+  async findByID(id: string) {
+    return this.prismaService.post.findUnique({
+      where: { id },
+    });
+  }
+
+  async deletePost(id: string) {
+    return this.prismaService.post.delete({
+      where: { id },
+    });
+  }
 }

@@ -1,19 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryRepository } from './repositories/category.repository';
-import { AlreadyExists } from 'src/common/errors/alreadyExists';
 import { RoleDTO } from 'src/role/dtos/role.dto';
+import { Messages } from 'src/common/messages/messages';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Injectable()
 export class CategoryService {
   constructor(private categoryRepository: CategoryRepository) {}
 
   async create(data: RoleDTO) {
-    const CategoryAlreadyExists = await this.categoryRepository.findByName(
+    const categoryAlreadyExists = await this.categoryRepository.findByName(
       data.name,
     );
 
-    if (CategoryAlreadyExists) {
-      throw new AlreadyExists();
+    if (categoryAlreadyExists) {
+      throw new ConflictException(Messages.CATEGORY.ALREADY_EXISTS);
     }
 
     const category = await this.categoryRepository.createCategory({
@@ -21,30 +25,32 @@ export class CategoryService {
     });
 
     return {
-      id: category.id,
-      name: category.name,
+      data: {
+        id: category.id,
+        name: category.name,
+      },
     };
   }
 
   async get() {
-    const category = await this.categoryRepository.findMany();
+    const categories = await this.categoryRepository.findMany();
 
-    if (!category) {
-      throw new NotFoundException();
+    if (!categories || categories.length === 0) {
+      throw new NotFoundException(Messages.CATEGORY.NOT_FOUND);
     }
 
-    return category;
+    return categories;
   }
 
   async delete(id: string) {
     const category = await this.categoryRepository.findByID(id);
 
     if (!category) {
-      throw new NotFoundException();
+      throw new NotFoundException(Messages.CATEGORY.NOT_FOUND);
     }
 
     await this.categoryRepository.deleteCategory(id);
 
-    return;
+    return { message: Messages.CATEGORY.DELETED };
   }
 }

@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InvalidCredentials } from 'src/common/errors/invalidCredentials';
 import { UserRepository } from 'src/user/repositories/user.repository';
 import * as argon2 from 'argon2';
 import { LoginDTO } from './dtos/login.dto';
+import { Messages } from 'src/common/messages/messages';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +16,13 @@ export class AuthService {
     const user = await this.userRepository.findByEmail(data.email);
 
     if (!user) {
-      throw new InvalidCredentials();
+      throw new UnauthorizedException(Messages.AUTH.INVALID_CREDENTIALS);
     }
 
     const passwordMatch = await argon2.verify(user.password, data.password);
 
     if (!passwordMatch) {
-      throw new InvalidCredentials();
+      throw new UnauthorizedException(Messages.AUTH.INVALID_CREDENTIALS);
     }
 
     const payload = {
