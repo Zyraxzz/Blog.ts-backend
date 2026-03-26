@@ -15,7 +15,7 @@ const PostSchema = z.object({
   content: z
     .string()
     .min(5, { message: 'Content must be at least 3 characters long' })
-    .max(1000, { message: 'Content must be at most 255 characters long' }),
+    .max(255, { message: 'Content must be at most 255 characters long' }),
   image: z.url('Invalid image').nullable().optional(),
   highlight: z.boolean().default(false),
   published: z.boolean().default(false),
