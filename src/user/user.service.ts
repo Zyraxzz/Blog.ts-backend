@@ -4,7 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { GetUserDTO, UpdateUserDTO, UserDTO } from './dtos/user.dto';
+import { UpdateUserDTO, UserDTO } from './dtos/user.dto';
 import * as argon2 from 'argon2';
 import { UserRepository } from 'src/user/repositories/user.repository';
 import { ImageService } from 'src/common/upload/image.service';

@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { RoleModule } from './role/role.module';
 import { PostModule } from './post/post.module';
 import { CategoryModule } from './category/category.module';
+import { FavoriteModule } from './favorite/favorite.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CategoryModule } from './category/category.module';
     RoleModule,
     PostModule,
     CategoryModule,
+    FavoriteModule,
   ],
   controllers: [],
   providers: [],
