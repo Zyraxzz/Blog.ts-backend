@@ -33,4 +33,11 @@ export const Messages = {
     ALREADY_EXISTS: 'A role with this name already exists.',
     INSUFFICIENT_PRIVILEGES: 'Your role does not allow this operation.',
   },
+
+  FAVORITE: {
+    ALREADY_EXISTS: 'You have already favorite this post.',
+    CREATED: 'Post added to favorites successfully.',
+    NOT_FOUND: 'Favorite not found.',
+    ERROR_CREATING: 'An error occurred while saving the favorite.',
+  },
 };

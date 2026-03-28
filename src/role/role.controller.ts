@@ -17,7 +17,7 @@ export class RoleController {
 
   @UseGuards(AuthGuard)
   @Post('create')
-  async crete(@Body() body: RoleDTO) {
+  async create(@Body() body: RoleDTO) {
     return await this.roleService.create(body);
   }
 

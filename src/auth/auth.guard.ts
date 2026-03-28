@@ -1,12 +1,13 @@
 import {
   CanActivate,
+  ConflictException,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Request } from 'express';
-import { InvalidCredentials } from 'src/common/errors/invalidCredentials';
+import { Messages } from 'src/common/messages/messages';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -17,7 +18,7 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new InvalidCredentials();
+      throw new ConflictException(Messages.AUTH.INVALID_CREDENTIALS);
     }
 
     try {
